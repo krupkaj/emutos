@@ -48,6 +48,8 @@ extern LONG jmp_xbios(WORD, ...);
 #define jmp_gemdos_wpp(a,b,c,d) jmp_gemdos((WORD)(a),(WORD)(b),(void *)(c),(void *)(d))
 #define jmp_gemdos_pww(a,b,c,d) jmp_gemdos((WORD)(a),(void *)(b),(WORD)(c),(WORD)(d))
 #define jmp_gemdos_wppp(a,b,c,d,e)  jmp_gemdos((WORD)(a),(WORD)(b),(void *)(c),(void *)(d),(void *)(e))
+#define jmp_gemdos_lww(a,b,c,d) jmp_gemdos((WORD)(a),(LONG)(b),(WORD)(c),(WORD)(d))
+
 #define jmp_bios_w(a,b)         jmp_bios((WORD)(a),(WORD)(b))
 #define jmp_bios_ww(a,b,c)      jmp_bios((WORD)(a),(WORD)(b),(WORD)(c))
 #define jmp_xbios_v(a)          jmp_xbios((WORD)(a))
@@ -69,6 +71,7 @@ extern LONG jmp_xbios(WORD, ...);
 #define Fread(a,b,c)        jmp_gemdos_wlp(0x3f,a,b,c)
 #define Fwrite(a,b,c)       jmp_gemdos_wlp(0x40,a,b,c)
 #define Fdelete(a)          jmp_gemdos_p(0x41,a)
+#define Fseek(a,b,c)        jmp_gemdos_lww(0x42,a,b,c)
 #define Fattrib(a,b,c)      jmp_gemdos_pww(0x43,a,b,c)
 #define Fdup(a)             jmp_gemdos_w(0x45,a)
 #define Fforce(a,b)         jmp_gemdos_ww(0x46,a,b)
@@ -210,6 +213,7 @@ extern DTA *dta;
 extern LONG redir_handle;
 extern char user_path[MAXPATHLEN];     /* from PATH command */
 extern char *environment;              /* from cmdasm.S */
+extern WORD redir_append;
 
 /*
  *  function prototypes

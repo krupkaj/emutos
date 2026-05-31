@@ -200,12 +200,23 @@ PRIVATE LONG redirect_stdout(char *redir)
 {
 LONG rc;
 
-    redir_handle= -1;
+    redir_handle = -1;
 
     if (!redir[0])
         return 0L;
 
-    rc = Fcreate(redir,0);
+    if (redir_append) {             /* redirection with append */
+        rc = Fopen(redir, 1);       /* write-only */
+
+        if (rc < 0)
+            rc = Fcreate(redir,0);
+
+        if (rc >= 0)
+            Fseek(0L, rc, 2);       /* seek to end */
+    } else {
+        rc = Fcreate(redir,0);
+    }    
+
     if (rc < 0L)
         return rc;
 

@@ -36,6 +36,7 @@ WORD nflops_copy;
 DTA *dta;
 char user_path[MAXPATHLEN];
 LONG redir_handle;
+WORD redir_append;
 
 /*
  * local to this set of functions
@@ -186,7 +187,18 @@ LONG rc;
     if (!*name)
         return;
 
-    rc = Fcreate(name,0);
+    if (redir_append) {
+        rc = Fopen(name, 1);        /* write-only */
+
+        if (rc < 0)
+            rc = Fcreate(name,0);
+
+        if (rc >= 0)
+            Fseek(0L, rc, 2);       /* seek to end */
+    } else {
+        rc = Fcreate(name,0);
+    }
+
     if (rc < 0)
         errmsg(rc);
     else redir_handle = rc;

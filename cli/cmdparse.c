@@ -90,6 +90,8 @@ PRIVATE WORD get_redirect(char *line,char **redir)
 char *p;
 WORD n, inquotes;
 
+    redir_append = FALSE;
+    
     for (p = line, n = 0, inquotes = 0; *p; p++) {
         if (*p == DBLQUOTE)
             inquotes ^= 1;
@@ -98,6 +100,14 @@ WORD n, inquotes;
                 *p = ' ';
                 *redir = p;
                 n++;
+
+                if (*(p+1) == '>') {      /* if >>, append */
+                    *(p+1) = ' ';
+                    redir_append = TRUE;
+                    p++;
+                } else {
+                    redir_append = FALSE;       
+                }
             }
         }
     }
